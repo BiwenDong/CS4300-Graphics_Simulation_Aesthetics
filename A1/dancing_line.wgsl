@@ -1,4 +1,4 @@
-@fragment
+ @fragment
 fn fs(@builtin(position) pos : vec4f) -> @location(0) vec4f {
   let uv = uvN(pos.xy);
   let bass = audio[0];
@@ -12,6 +12,7 @@ fn fs(@builtin(position) pos : vec4f) -> @location(0) vec4f {
   let y = 0.5 
         + wave * energy * (0.10 + beat * 0.08)
         + detail * energy * 0.05;
+
   let thickness = 0.008 + beat * 0.004;
   let dist = abs(uv.y - y);
   let line = smoothstep(thickness, 0.0, dist);
@@ -23,7 +24,6 @@ fn fs(@builtin(position) pos : vec4f) -> @location(0) vec4f {
   let inv = 1.0 - step(0.5, uv.x);
   let mixed = mix(line, glow, 0.5);
   let t = seconds();
-  let evolution = smoothstep(0.0, 20.0, t); 
   let r = mixed * (0.6 + bass * 2.0 + 0.3 * sin(t * 2.0));
   let g = mixed * (0.5 + mid  * 1.5 + 0.3 * cos(t * 2.5 + 1.0));
   let b = mixed * (0.8 + high * 2.0 + 0.3 * sin(t * 3.0 + 2.0));
@@ -32,8 +32,9 @@ fn fs(@builtin(position) pos : vec4f) -> @location(0) vec4f {
         *(0.95 + 0.05 * sharp)
         *(0.9 + 0.1 * inv)
         *(0.8 + fade * 0.2)
-				*(0.8 + clampEnergy * 0.2); 
-  let color = vec3f(r, g, b) * modulation;
-  return vec4f(color, 1.0);
+        *(0.8 + clampEnergy * 0.2); 
+  let baseColor = vec3f(r, g, b) * modulation;
+  let fb = lastframe(uv);
+  let finalColor = baseColor + fb.rgb * 0.08;
+  return vec4f(finalColor, 1.0);
 }
-

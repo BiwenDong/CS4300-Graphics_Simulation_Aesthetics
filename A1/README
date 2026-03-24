@@ -1,18 +1,47 @@
 # Assignment 1
 
+---
+
 ## Video
 https://www.youtube.com/watch?v=0C6E5KYuBsk
+
+---
 
 ## Code
 [dancing_line.wgsl](./dancing_line.wgsl)
 
+---
+
 ## Explanation
 
+---
+
 ### Aesthetic Intent
-My “Dancing Line” expresses the relationship between sound and movement through a minimalist visual form. I chose to use only a single horizontal line as element to avoid the distraction of complex shapes. When there is no sound input, the line remains completely still; when sound is present, the line begins to fluctuate slightly, transitioning from static to dynamic. This transformation resembles the visualization of a heartbeat or a signal, making the inherently invisible sound visible. I deliberately control the amplitude of the fluctuations, keeping them within a restrained range to avoid overly exaggerated or chaotic visual effects. Rather than creating a strong visual impact, I aim to convey a subtle, perceptible, yet understated process of change. The overall style leans toward minimalism, emphasizing the principle that “change occurs only when there is input.”
+
+My “Dancing Line” expresses the relationship between sound and movement through a minimalist visual form. I chose to use only a single horizontal line as element to avoid the distraction of complex shapes. 
+
+When there is no sound input, the line remains completely still; when sound is present, the line begins to fluctuate slightly, transitioning from static to dynamic. This transformation resembles the visualization of a heartbeat or a signal, making the inherently invisible sound visible. 
+
+I deliberately control the amplitude of the fluctuations, keeping them within a restrained range to avoid overly exaggerated or chaotic visual effects. Rather than creating a strong visual impact, I aim to convey a subtle, perceptible, yet understated process of change. 
+
+The overall style leans toward minimalism, emphasizing the principle that “change occurs only when there is input.”
+
+---
 
 ### Technical Exploration
-I use sine and cosine functions to generate the basic waveforms, and add detail by superimposing waveforms of different frequencies. At the same time, I extract three channels—low, mid, and high frequencies—from the audio input and combine them with weighting to form a single overall energy value. To make the animation appear more natural at different volume levels, I apply a power function to the energy value for nonlinear amplification, so that louder sounds produce more pronounced visual feedback, while softer sounds maintain smaller changes. Furthermore, I utilized functions such as `smoothstep`, `clamp`, `exp`, and `mix` to control line thickness, edge transitions, and brightness decay, resulting in a softer visual effect. Additionally, by introducing time variation via `seconds()`, I made the color and motion more dynamic over time rather than keeping them completely consistent.
+
+I use sine and cosine functions to generate the basic waveforms, and add detail by superimposing waveforms of different frequencies. 
+
+At the same time, I extract three channels—low, mid, and high frequencies—from the audio input and combine them with weighting to form a single overall energy value. To make the animation appear more natural at different volume levels, I apply a power function to the energy value for nonlinear amplification, so that louder sounds produce more pronounced visual feedback, while softer sounds maintain smaller changes. 
+
+Furthermore, I utilized functions such as `smoothstep`, `clamp`, `exp`, and `mix` to control line thickness, edge transitions, and brightness decay, resulting in a softer visual effect. 
+
+Additionally, by introducing time variation via `seconds()`, I made the color and motion more dynamic over time rather than keeping them completely consistent.
+
+---
 
 ### Feedback
-I showed it to a friend of mine and asked for his opinion. He thought the piece looked a lot like an audio waveform, especially when music was playing; the way the lines changed made it feel as though we were seeing the sound. However, my original goal was closer to the effect of an electrocardiogram: remaining mostly steady, with sudden spikes appearing only during moments of distinct rhythm. But during the implementation process, I primarily drove the line changes continuously based on the overall volume, rather than implementing true beat-triggered changes, so the animation as a whole appears as a relatively smooth wave.
+
+I showed it to a friend of mine and asked for his opinion. He thought the piece looked a lot like an audio waveform, especially when music was playing; the way the lines changed made it feel as though we were seeing the sound. 
+
+However, my original goal was closer to the effect of an electrocardiogram: remaining mostly steady, with sudden spikes appearing only during moments of distinct rhythm. But during the implementation process, I primarily drove the line changes continuously based on the overall volume, rather than implementing true beat-triggered changes, so the animation as a whole appears as a relatively smooth wave.

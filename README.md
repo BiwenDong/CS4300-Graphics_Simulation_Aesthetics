@@ -1,0 +1,9 @@
+# Hello!
+
+This is my website for CS-4300: Graphics, Simulation, and Aesthetics  
+Owner: Biwen Dong
+
+---
+
+## Assignment 1
+ [Click here to view Assignment 1](./A1)

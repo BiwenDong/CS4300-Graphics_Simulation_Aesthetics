@@ -6,4 +6,6 @@ Owner: Biwen Dong
 ---
 
 ## Assignment 1
- [Click here to view Assignment 1](./A1)
+[video](https://www.youtube.com/watch?v=0C6E5KYuBsk)  
+[code](./A1/dancing_line.wgsl)  
+[explanation](./A1/REAMME)

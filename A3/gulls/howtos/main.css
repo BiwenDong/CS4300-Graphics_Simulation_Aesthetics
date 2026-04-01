@@ -1,0 +1,67 @@
+:root {
+  --main-text-color: #bbb;
+}
+
+::highlight(keywords) { color:white; } 
+::highlight(strings)  { color:white; }
+::highlight(comments) { background-color:#333; color: var(--main-text-color) }
+
+/* main editor class */
+.teeny-editor { 
+  /* choose font and size */
+  font-family:   'Roboto Mono', monospace; 
+  font-size:     14px;
+  /* fill viewport with editor */
+  height:        100vh;
+  /* provide scrollbars if needed */
+  overflow-y:    auto;
+  /* preserve whitespace */
+  white-space:   pre-wrap;
+}
+
+.teeny-editor div { 
+  /* ensure all divs are block elements to prevent collapse when empty*/
+  display:  block; 
+  position: relative; 
+}
+
+/* remove next two rules if you don't want line numbers */
+.teeny-editor {
+  padding-left:  4rem; 
+  counter-reset: line; 
+}
+.teeny-editor div::before {
+  content:           counter(line); 
+  counter-increment: line; 
+  position:          absolute; 
+  /* should accommodate up to 999 lines, otherwise tweak as needed */
+  right:             calc(100% + .75rem); 
+  opacity:           0.5; 
+}
+
+body { 
+  background:black;
+  padding:0;
+  margin:0;
+  /* the body color property determines default text color */
+  color:var(--main-text-color);
+  /* measured in character length (not pixels/ems etc) */
+  tab-size:2;
+}
+
+/* for when text is selected */
+::selection {
+  background:#444;
+  color:white;
+}
+
+/* 
+ * fancy pseudo-selector to not color numbers when they are inside
+ * coments or strings
+ */
+.teeny-numbers:not( .teeny-strings > span, .teeny-comments > span )  { 
+  color:#faa; 
+}
+
+/* active line highlight, requires plugin */
+.teeny-active { background:#222 }

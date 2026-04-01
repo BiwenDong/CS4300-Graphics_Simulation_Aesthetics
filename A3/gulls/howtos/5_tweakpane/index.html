@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <script src='main.js' type='module'></script>
+    <script src='../loader.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/microlight@latest'></script>
+
+    <link href='../shared.css' rel='stylesheet'>
+    <link rel='shortcut icon' href='data:image/x-icon;,' type='image/x-icon'> 
+<style>
+/*
+  all the other howtos assume a single canvas is on the page,
+  but with this tweakpane example that's not the case... so this
+  extra css is just to remove the <canvas> rule found in main.css,
+  and only apply it to the gulls canvas (#sc). if you're using
+  tweakpane, just make sure you apply any canvas rules to your specific
+  gulls instance and you won't have to do this hacky nonsense.
+*/
+canvas {
+  width:inherit;
+  height:inherit;
+  position:inherit;
+  top:inherit;
+  left:inherit;
+  z-index:inherit;
+}
+
+#sc {
+  width:100% !important;
+  height:100% !important;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
+}
+</style>
+  </head>
+  <body>
+    <span id='buttons'>
+      <button>main.js</button>
+      <button>frag.wgsl</button>
+    </span>
+
+    <code class='code'></code>
+
+    <canvas id='sc'></canvas>
+  </body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<h1 id="howtos">howtos</h1>
+<p>This folder contains small examples that illustrate individual
+concepts / techniques. The howtos in this directory are presented in a
+few different ways:</p>
+<ul>
+<li>The <code>main.verbose.js</code> file in each demo contains both the
+WebGPU JavaScript and all the WGSL shaders (in JS strings) in a single,
+heavily commented file. These files are the best places to go to
+understand how gulls work.</li>
+<li>When viewing each demo, you can switch between the various
+JavaScript files and shader files used.</li>
+<li>the <code>main.js</code>, <code>frag.wgsl</code>, and
+<code>compute.wgsl</code> files are minimal, non-commented files that
+are designed to be terse and readable.</li>
+</ul>
+<ol type="1">
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/1_simplest"><em>Simplest</em></a>
+- the smallest gulls project needed to get a fullscreen fragment
+shader presented on screen.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/2_one_uniform"><em>One
+Uniform</em></a> - adding a single uniform to a fragment shader, and
+setting up the CPU to use it for communication with the GPU</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/3_using_coordinates"><em>Using
+coordinates</em></a> - by passing the canvas resolution to our shader as
+a uniform, we can create normalized coordinates for each pixel we’re
+operating on.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/4_mouse_coordinates"><em>Mouse
+coordinates</em></a> - sending mouse position and left click status to
+the fragment shader as a uniform</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/5_tweakpane"><em>Tweakpane</em></a>
+using the Tweakpane system to add a GUI to control our shader</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/6_audio"><em>Audio</em></a>
+- using the Audio helper to send FFT analysis of incoming audio to
+gulls to the fragment shader.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/7_readtexture"><em>Read
+texture</em></a> - Read from a texture.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/8_feedback"><em>Feedback</em></a>
+- a simple mouse-driven feedback example.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/9_video_feedback"><em>Video
+Feedback</em></a> - how to use live video feeds + feedback together</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/10_simplest_compute"><em>Simplest
+Compute</em></a> - Using a compute shader to incremeent a single number,
+which in turn is used to determine the color of all pixels in a fragment
+shader.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/11_compute_with_position"><em>Compute
+with position</em></a> - Performing compute shader computations for
+every pixel on the screen.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/12_particle"><em>Particle</em></a>
+- A single instanced particle drawn with a vertex shader.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/13_many_particles"><em>Many
+particles</em></a> - Many particles driven by compute + vertex
+shaders.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/14_postprocessing"><em>Post-processing</em></a>
+- Demonstrates how to render to texture and then color process the
+results.</li>
+<li><a
+href="https://charlieroberts.codeberg.page/gulls/howtos/15_postprocessing_twopassblur"><em>Multipass
+post-processing</em></a> -A two-pass gaussian blur post-processing
+effect.</li>
+</ol>
+</body>
+</html>

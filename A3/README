@@ -1,0 +1,15 @@
+# Assignment 3
+
+### Project Links
+1. https://BiwenDong.github.io/CS4300-Graphics_Simulation_Aesthetics/A3/
+2. run `python3 -m http.server 8000`, and then open http://localhost:8000/A3/
+
+### Aesthetic Intent
+This project explores the concept of distorted and unstable portraits. Rather than presenting the webcam as a clear mirror, I designed a system in which the image constantly shifts, flows, and fragments over time. The combination of feedback and process noise creates a sense that the image is never static, but always in a state of transition. Whenever the mouse moves, that area is magnified and large ripples appear—a moment of localized disturbance. These disturbances spread outward like waves, suggesting that the interaction is reshaping the visual identity. Warm tones and fluid distortions together form a unified visual style.
+
+### Technical Exploration
+This project was created using WebGPU in conjunction with the gulls.js framework. A full-screen fragment shader reads real-time webcam input, passes it as a `texture_external`, and applies feedback via an off-screen buffer to generate dynamic trajectories. To create procedural noise, we use an FBM to generate smooth, layered distortion effects across the entire image.
+The rippling trajectories are calculated using a distance-based sine function. Sliders are used to adjust the distortion intensity, color tone, and video blend, while keyboard input allows switching between multiple visual modes. Finally, the wave amplitude can also be adjusted in real-time using the mouse wheel to control the ripple amplitude.
+
+### Feedback
+

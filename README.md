@@ -9,3 +9,7 @@ Owner: Biwen Dong
 [video](https://www.youtube.com/watch?v=0C6E5KYuBsk)  
 [code](./A1/dancing_line.wgsl)  
 [explanation](./A1/README)
+
+## Assignment 1
+[code](./A2)  
+[explanation](./A2/README)

@@ -7,8 +7,8 @@ Owner: Biwen Dong
 
 ## Assignment 2
 [video](https://www.youtube.com/watch?v=0C6E5KYuBsk)  
-[code](./A1/dancing_line.wgsl)  
-[explanation](./A1/README)
+[code](./A2/dancing_line.wgsl)  
+[explanation](./A2/README)
 
 ## Assignment 3
 [code](./A3)  

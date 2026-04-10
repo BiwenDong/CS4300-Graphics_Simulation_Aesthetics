@@ -52,7 +52,6 @@ fn cs(@builtin(global_invocation_id) id:vec3u){
   var newA=a+(Da*lapA-reaction+f*(1.0-a))*dt;
   var newB=b+(Db*lapB+reaction-(f+k)*b)*dt;
 
-  // 鼠标交互
   let dx=f32(x)-mouse.x;
   let dy=f32(y)-mouse.y;
   if(mouse.z>0.5 && dx*dx+dy*dy<100.0){

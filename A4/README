@@ -1,0 +1,19 @@
+# Assignment 4 - Reaction Diffusion
+
+## Project Links
+
+- Live Demo: https://biwendong.github.io/CS4300-Graphics_Simulation_Aesthetics/A4/
+
+## Aesthetic Intent
+This project aims to generate dynamic textural effects with organic forms using the Reaction-Diffusion algorithm. I sought to simulate processes similar to growth and diffusion found in nature, such as the patterns formed by cell division. By adjusting parameters, different areas exhibit distinct structures—such as dot, stripe, or maze-like patterns—thereby creating an image with visual depth.
+Visually, I have chosen to use blue and orange for contrast. By introducing a style map, the image exhibits spatial gradients, avoiding a monotonous appearance and making the overall composition more dynamic and rich.
+
+## Technical Exploration
+This project is based on the Gray-Scott reaction-diffusion model and is implemented on a GPU using WebGPU compute shaders. Each pixel stores two chemical species, A and B; diffusion is calculated using the Laplacian, and the system is updated by incorporating the reaction term.
+During implementation, I used state-in/state-out to update the system state and accelerated the simulation process through parallel computation using workgroups. Additionally, I implemented a 9-point Laplacian to achieve a smoother diffusion effect.
+For parameter control, I used Tweakpane to provide real-time adjustment of feed, kill, diffusion A, and diffusion B. Regarding the Style Map, I mapped the feed and kill parameters to spatial positions to enable different behaviors in different regions. Users can click or drag the mouse to inject substance B into the system, thereby generating new reaction patterns.
+
+
+## Feedback
+Some people find this work visually appealing, particularly the spatial variations created by the style map, which lend the image a greater sense of depth. However, under certain settings, the system produces areas that are overly saturated and somewhat jarring to the eye.
+

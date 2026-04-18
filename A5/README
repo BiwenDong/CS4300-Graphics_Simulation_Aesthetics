@@ -1,0 +1,17 @@
+# Assignment 5 - Reaction Diffusion
+
+## Project Links
+
+- Live Demo: https://biwendong.github.io/CS4300-Graphics_Simulation_Aesthetics/A5/
+
+## Aesthetic Intent
+Artistically, I drew inspiration from the common depictions of flames or magical particles found in video games. The overall effect aims to convey a dynamic process where particles continuously erupt from the bottom, spread upward, and gradually dissipate. I employed a particle style featuring a bright center and soft edges, using a color gradient transitioning from bright yellow to orange to enhance the luminous effect, creating a fiery, intense look when the particles overlap. At the same time, the particles gradually shrink and become transparent over their lifecycle, resulting in a natural fading process.
+
+## Technical Exploration
+In the compute shader, the state of all particles is updated every frame. When a particle’s lifecycle ends, it is regenerated at the emitter’s position with a random direction and initial velocity, creating a continuous spray effect.
+In the vertex and fragment shaders: Each particle is expanded into a screen-aligned billboard. Instanced rendering is used to improve performance. In the fragment shader, a circular gradient is generated using a distance function to create particles with soft edges, and additive blending is used to enhance the brightness overlay effect.
+Additionally, the project implements basic interactive controls (such as flame height) by modifying uniform parameters.
+
+
+## Feedback
+

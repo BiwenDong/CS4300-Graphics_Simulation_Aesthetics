@@ -17,5 +17,10 @@ Owner: Biwen Dong
 
 ## Assignment 4
 [code](./A4)  
-[repo]()
+[repo](https://biwendong.github.io/CS4300-Graphics_Simulation_Aesthetics/A4/)
 [explanation](./A4/README)
+
+## Assignment 5
+[code](./A5)  
+[repo](https://biwendong.github.io/CS4300-Graphics_Simulation_Aesthetics/A5/)
+[explanation](./A5/README)

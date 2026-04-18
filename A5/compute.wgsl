@@ -53,6 +53,7 @@ fn cs_main(@builtin(global_invocation_id) gid: vec3u) {
   let baseSpeed = params.emitter.z;
   let spread = params.emitter.w;
   let gravity = params.render.z;
+  let speedMult = params.render.w;
 
   p.life = p.life - dt;
 
@@ -63,7 +64,7 @@ fn cs_main(@builtin(global_invocation_id) gid: vec3u) {
     let angle = (r.x - 0.5) * spread;
 
     let dir = normalize(vec2f(sin(angle), cos(angle)));
-    let speed = baseSpeed * (0.5 + 0.9 * r.y);
+    let speed = baseSpeed * (0.5 + 0.9 * r.y) * speedMult;
 
     p.pos = emitterPos + vec2f(
       (rand1(seed + 3.1) - 0.5) * 0.03,

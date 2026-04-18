@@ -6,13 +6,10 @@ struct Particle {
 }
 
 struct SimParams {
-  // x = time, y = dt, z = drag, w = respawnToggle
   time_dt: vec4f,
 
-  // x = emitterX, y = emitterY, z = baseSpeed, w = spread
   emitter: vec4f,
 
-  // x = particleSize, y = aspect, z = gravity, w = brightness
   render: vec4f,
 }
 
@@ -51,11 +48,9 @@ fn vs_main(
 
   let lifeT = clamp(p.life / max(p.maxLife, 0.0001), 0.0, 1.0);
 
-  // 粒子刚出生大一点，快消失时缩小一点
   let sizeScale = 0.35 + lifeT * 0.85;
   var offset = quad * baseSize * sizeScale;
 
-  // 保持屏幕上接近正圆
   offset.x = offset.x / aspect;
 
   let clipPos = p.pos + offset;
@@ -71,14 +66,11 @@ fn vs_main(
 fn fs_main(in: VSOut) -> @location(0) vec4f {
   let r = length(in.localUV);
 
-  // 中心亮，边缘柔和
   let soft = smoothstep(1.0, 0.0, r);
   let core = smoothstep(0.45, 0.0, r);
 
-  // lifeT 越高越亮
   let lifeGlow = 0.3 + in.lifeT * 0.7;
 
-  // 火花/能量感颜色
   let innerColor = vec3f(1.0, 0.95, 0.75);
   let outerColor = vec3f(1.0, 0.45, 0.10);
 

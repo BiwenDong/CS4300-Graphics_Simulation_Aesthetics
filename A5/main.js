@@ -178,6 +178,12 @@ async function init() {
     heightVal.textContent = parseFloat(heightSlider.value).toFixed(2);
   });
 
+  const speedSlider = document.getElementById("speedSlider");
+  const speedVal = document.getElementById("speedVal");
+  speedSlider.addEventListener("input", () => {
+    speedVal.textContent = parseFloat(speedSlider.value).toFixed(2);
+  });
+
   let lastTime = performance.now();
 
   function frame(now) {
@@ -193,7 +199,7 @@ async function init() {
 
       0.0, -0.8, parseFloat(heightSlider.value), 1.5,
 
-      0.03, aspect, 0.5, 1.0,
+      0.03, aspect, 0.5, parseFloat(speedSlider.value),
     ]);
 
     device.queue.writeBuffer(simParamBuffer, 0, simParams);

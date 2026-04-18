@@ -12,7 +12,7 @@ Owner: Biwen Dong
 
 ## Assignment 3
 [code](./A3)  
-[repo](https://BiwenDong.github.io/CS4300-Graphics_Simulation_Aesthetics/A3/)
+[repo](https://BiwenDong.github.io/CS4300-Graphics_Simulation_Aesthetics/A3/)  
 [explanation](./A3/README)
 
 ## Assignment 4

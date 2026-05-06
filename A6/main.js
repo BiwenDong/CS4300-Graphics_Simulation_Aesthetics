@@ -1,7 +1,3 @@
-// Langton's Ants – main.js
-// Grid: 256 × 256 u32 storage buffer (0 = empty, 1/2/3 = pheromone by type)
-// Ants: up to MAX_ANTS, each stored as 4 × u32 {x, y, dir, type}
-
 const GRID_W   = 256;
 const GRID_H   = 256;
 const MAX_ANTS = 16;
@@ -34,7 +30,6 @@ async function init() {
 
   context.configure({ device, format, alphaMode: "premultiplied" });
 
-  // ── Load shaders ────────────────────────────────────────────────────────────
   const [computeCode, renderCode] = await Promise.all([
     fetch("compute.wgsl").then(r => r.text()),
     fetch("frag.wgsl").then(r => r.text()),
@@ -42,26 +37,21 @@ async function init() {
   const computeModule = device.createShaderModule({ code: computeCode });
   const renderModule  = device.createShaderModule({ code: renderCode  });
 
-  // ── Buffers ─────────────────────────────────────────────────────────────────
-  // Grid: GRID_W × GRID_H u32 values
   const gridBuffer = device.createBuffer({
     size:  GRID_W * GRID_H * 4,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 
-  // Ants: MAX_ANTS × 4 u32s  (x, y, dir, type)  = 16 bytes per ant
   const antBuffer = device.createBuffer({
     size:  MAX_ANTS * 16,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 
-  // Uniforms: grid_w, grid_h, ant_count, _pad
   const uniformBuffer = device.createBuffer({
     size:  16,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  // ── Bind group layouts ───────────────────────────────────────────────────────
   const computeBGLayout = device.createBindGroupLayout({
     entries: [
       { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer: { type: "storage"           } },
@@ -78,7 +68,6 @@ async function init() {
     ],
   });
 
-  // ── Bind groups ──────────────────────────────────────────────────────────────
   const computeBG = device.createBindGroup({
     layout:  computeBGLayout,
     entries: [
@@ -97,7 +86,6 @@ async function init() {
     ],
   });
 
-  // ── Pipelines ────────────────────────────────────────────────────────────────
   const computePipeline = device.createComputePipeline({
     layout:  device.createPipelineLayout({ bindGroupLayouts: [computeBGLayout] }),
     compute: { module: computeModule, entryPoint: "cs_main" },
@@ -110,7 +98,6 @@ async function init() {
     primitive: { topology: "triangle-list" },
   });
 
-  // ── UI ───────────────────────────────────────────────────────────────────────
   const resetBtn       = document.getElementById("resetBtn");
   const speedSlider    = document.getElementById("speedSlider");
   const speedVal       = document.getElementById("speedVal");
@@ -132,10 +119,8 @@ async function init() {
     antCount  = parseInt(antCountSlider.value);
     stepCount = 0;
 
-    // Clear grid
     device.queue.writeBuffer(gridBuffer, 0, new Uint32Array(GRID_W * GRID_H));
 
-    // Place ants symmetrically around center, each with a unique direction
     const antData = new Uint32Array(MAX_ANTS * 4);
     const cx      = Math.floor(GRID_W / 2);
     const cy      = Math.floor(GRID_H / 2);
@@ -162,7 +147,6 @@ async function init() {
   resetBtn.addEventListener("click", reset);
   reset(); // initial state
 
-  // ── Frame loop ───────────────────────────────────────────────────────────────
   function frame() {
     resizeCanvas();
 
@@ -172,16 +156,14 @@ async function init() {
 
     const encoder = device.createCommandEncoder();
 
-    // Run N compute steps per frame
     for (let s = 0; s < steps; s++) {
       const pass = encoder.beginComputePass();
       pass.setPipeline(computePipeline);
       pass.setBindGroup(0, computeBG);
-      pass.dispatchWorkgroups(1);   // 64 threads; only ant_count threads do work
+      pass.dispatchWorkgroups(1);
       pass.end();
     }
 
-    // Full-screen render
     const view       = context.getCurrentTexture().createView();
     const renderPass = encoder.beginRenderPass({
       colorAttachments: [{
@@ -193,7 +175,7 @@ async function init() {
     });
     renderPass.setPipeline(renderPipeline);
     renderPass.setBindGroup(0, renderBG);
-    renderPass.draw(6);   // 6 vertices = 2 triangles = full-screen quad
+    renderPass.draw(6);
     renderPass.end();
 
     device.queue.submit([encoder.finish()]);

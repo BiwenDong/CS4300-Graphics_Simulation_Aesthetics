@@ -1,64 +1,11 @@
-# Assignment 6 – Langton's Ants
+# Assignment 6 - vants
 
-## Project Link
+## Project Links
 
 - Live Demo: https://biwendong.github.io/CS4300-Graphics_Simulation_Aesthetics/A6/
 
----
+## Aesthetic Intent
+Although the behavior of individual Langton’s Ants is very simple, the system as a whole can generate complex patterns. Building on this foundation, I introduced multiple ant types, transforming the system from one governed by a single rule into one driven by the interaction of different rules. I also employed a limited color palette to distinguish between different ant types and the trails they leave behind. For example, classic ants use cyan trails, reverse ants use purple, and builder ants use orange.
 
-## What Are Langton's Ants?
-
-Langton's Ants (also called vants, or virtual ants) are a classic cellular automaton that produces surprisingly complex behavior from a tiny ruleset. Each ant lives on a 2D grid and performs the same two-line algorithm every step:
-
-1. If the current cell has no pheromone: turn 90° clockwise, leave a pheromone mark, then move forward.
-2. If the current cell already has pheromone: turn 90° counter-clockwise, erase the pheromone, then move forward.
-
-Despite having only four possible headings and a binary grid, the classic ant produces chaotic, seemingly random patterns for the first ~10,000 steps and then suddenly self-organizes into an infinitely repeating "highway" — a diagonal ramp that grows without bound. The emergence of order from randomness, with no external guidance, is what makes Langton's Ants a model of *stigmergic* behavior.
-
----
-
-## Three Behaviors Implemented
-
-### Type 0 — Classic Langton's Ant (cyan trail / red ant)
-The original algorithm. On an empty cell it turns right and stamps the grid; on a marked cell it turns left and clears the mark. After roughly 10,000 steps the ant breaks out of its chaotic "scribble" phase and begins constructing a perfectly regular highway that marches diagonally across the grid forever.
-
-### Type 1 — Reverse Ant (violet trail / green ant)
-The turning rules are flipped: turn left on empty, turn right on pheromone. This mirror-image rule produces an equally chaotic early phase but the highway — when it emerges — travels in the opposite diagonal direction. When run alongside the classic ant the two trails interact, erasing each other's pheromones and creating unexpected interference patterns that neither ant would produce alone.
-
-### Type 2 — Builder Ant (amber trail / blue ant)
-On an empty cell the builder turns right and leaves a mark (same as classic). On a marked cell it continues straight without erasing the trail. Because the pheromone is never removed, the ant carves long straight corridors through its own accumulated marks instead of the zigzag erasure pattern of the other types. Over time this produces dense, filled rectangular regions with sharp borders — a visually distinct texture compared to the sparse lattice of the classic ant.
-
----
-
-## Observed Patterns
-
-Running all three ants simultaneously from neighboring starting positions produces the most interesting results. For the first few hundred steps each ant creates its own colored scribble. Around 3,000–5,000 steps the classic and reverse ants begin erasing each other's trails wherever their paths cross, creating dark "collision corridors" through both colored fields. The builder ant, unaffected by erasure, gradually floods its region with solid amber, eventually bumping into the boundary and wrapping to the opposite edge.
-
-At high speed (100 steps/frame) the classic ant's highway emerges dramatically — a thin cyan diagonal line that shoots across the dark field, periodically interrupted wherever the reverse ant's violet trail blocks it. With a single ant of each type and enough steps, the grid settles into slowly evolving striped regions separated by active erasing fronts.
-
----
-
-## Technical Approach
-
-The simulation runs entirely on the GPU. A WebGPU compute shader (`compute.wgsl`) updates all ant positions in parallel each frame — each GPU thread handles one ant. The 256 × 256 pheromone grid is a storage buffer of `u32` values (0 = empty; 1/2/3 = pheromone left by ant type 0/1/2). After the compute pass, a full-screen quad render pass (`frag.wgsl`) maps every screen pixel to a grid cell, reads the pheromone value, and checks whether an ant occupies that cell to draw it on top.
-
-Multiple compute dispatches are issued per animation frame to drive the simulation at adjustable speed (1–100 steps per frame). All state lives in GPU buffers; no data is read back to the CPU.
-
----
-
-## How to Run
-
-Open `index.html` from a local HTTP server (required for ES module `fetch`):
-
-```bash
-# Python 3
-python3 -m http.server 8080
-# then open http://localhost:8080/A6/
-```
-
-Or use the VS Code "Live Server" extension. Chrome (version 113+) is required for WebGPU support.
-
-**Controls:**
-- **Reset** — clears the grid and restarts all ants at the center.
-- **Speed slider** — steps per animation frame (1 = slow enough to watch individual moves; 100 = fast-forward to emergent patterns).
-- **Ants slider** — total ant count (1–9). Types cycle 0 → 1 → 2 → 0 … Change and press Reset to apply.
+## Technical Exploration
+This project uses WebGPU to store grid data in the GPU’s storage buffer. The position, direction, and type of each ant are also stored independently, allowing for the parallel updating of multiple ants’ behaviors on the GPU. Building on the basic Langton’s Ant rules, I have implemented three distinct behavioral patterns. Classic ants turn right at empty cells and leave a trail, while turning left at existing trails and clearing them. Reverse ants completely reverse this rule, whereas builder ants do not turn when encountering an existing trail but instead continue forward and leave a trail.

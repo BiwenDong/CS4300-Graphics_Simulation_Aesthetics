@@ -1,0 +1,27 @@
+# Final Project Writeup – Physarum Slime Mold Simulation
+
+## Overview
+
+This project implements a real-time Physarum polycephalum (slime mold) simulation rendered in the browser using bare WebGPU. The two chosen explorations are (1) implementing a new simulation and (2) improving visual representation through post-processing effects.
+
+## Implementation Process
+
+The simulation follows the agent-based Physarum model described by Jeff Jones (2010). Each of 80,000 agents carries a position and angle. On every frame the GPU runs three sequential passes encoded into a single command buffer.
+
+**Agent pass (`agents.wgsl`).** Each agent samples the pheromone trail texture at three sense points — left, centre, and right of its heading — then steers toward the strongest signal. If the centre is dominant the agent continues straight with a small random wiggle to break symmetry; otherwise it turns by a fixed `turn_speed` toward whichever side is stronger. After updating its heading the agent moves forward by `move_speed` pixels and atomically increments a u32 deposit counter at its new texel position. Using `atomicAdd` on an `array<atomic<u32>>` eliminates the data-race artefacts that occur with plain float writes when many agents converge on the same cell.
+
+**Diffuse pass (`diffuse.wgsl`).** This pass reads the previous trail texture, applies a 3×3 box blur (diffusion), multiplies by a `decay` factor (evaporation), then adds the normalised deposit count from the agent pass and zeroes it with `atomicExchange`. The result is clamped to [0, 1] and written to the opposite trail texture via a `texture_storage_2d<r32float, write>` binding. Ping-pong between two `r32float` storage textures avoids read-write hazards. Mouse interaction injects an extra Gaussian pheromone beacon at the cursor position, giving users a direct way to attract or redirect the network.
+
+**Render pass (`render.wgsl`).** A full-screen quad fragment shader reads the freshly-written trail texture using `textureLoad` (required because `r32float` is not a filterable format in WebGPU). Post-processing is achieved by sampling two concentric 8-point rings — radius 4 and radius 10 pixels — and blending the averages back with the direct value. The bloom intensity is exposed as a real-time slider. The combined value drives a bioluminescent colour palette that maps near-zero intensities to deep navy, mid values to teal, and saturated regions to icy white-cyan.
+
+## Challenges
+
+The main challenge was navigating WebGPU's strict texture-format rules. The `r32float` format supports write-only storage texture binding but is **not filterable**, so `textureSample` with a linear sampler is rejected at pipeline creation. Switching to `textureLoad` with integer coordinates solved this cleanly and actually simplified the bloom code, since offsets are naturally expressed in trail-texels rather than normalised UV coordinates. A secondary challenge was deposit correctness: plain `f32` array writes produced faint visual artefacts when many agents converged. Replacing them with `atomicAdd` on a `u32` buffer and scaling on readback eliminated the issue.
+
+## Technical Goals
+
+The goal was to reproduce the characteristic network morphology of Physarum — dense branching filaments, looping structures, and the Steiner-tree-like optimisation behaviour — entirely on the GPU at 60 fps. All three shaders, the ping-pong texture management, and the atomic deposit scheme were implemented from scratch without helper libraries, consistent with previous assignments.
+
+## Aesthetic Goals
+
+The project aims for a bioluminescent theme: dark ocean-floor background, glowing teal filaments, and over-saturated white nodes where many agents converge. The bloom glow reinforces the organic quality by softening hard trail edges into diffuse halos. Sliders expose the six most expressive parameters — decay rate, sensor geometry, turning speed — so the user can continuously morph between sparse dendritic networks, dense carpet textures, and chaotic tangled forms. The mouse beacon adds a performative dimension: drawing a path in the air gradually shifts the entire network toward the cursor over several seconds, making the simulation feel alive.

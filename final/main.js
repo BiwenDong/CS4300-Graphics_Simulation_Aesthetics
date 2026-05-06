@@ -1,18 +1,7 @@
-// Physarum Slime Mold – main.js
-//
-// Two WebGPU explorations:
-//   1) New simulation  – Physarum polycephalum (slime mold) agent model
-//   2) Visual effects  – multi-tap bloom / glow post-processing in the render shader
-//
-// Pipeline per frame:
-//   a) Compute: sense-turn-move agents, deposit pheromone into atomic buffer
-//   b) Compute: 3×3 blur + decay of trail texture (ping-pong), consume deposits
-//   c) Render:  full-screen quad with bioluminescent palette + bloom sampling
-
 const TRAIL_W     = 512;
 const TRAIL_H     = 512;
 const AGENT_COUNT = 80_000;
-const UNI_FLOATS  = 16;           // size of the uniform block in f32s
+const UNI_FLOATS  = 16;         
 
 async function init() {
   if (!navigator.gpu) { alert("WebGPU is not supported in this browser."); return; }
@@ -38,7 +27,6 @@ async function init() {
   resizeCanvas();
   context.configure({ device, format, alphaMode: "premultiplied" });
 
-  // ── Load shaders ───────────────────────────────────────────────────────────
   const [agentCode, diffuseCode, renderCode] = await Promise.all([
     fetch("agents.wgsl").then(r => r.text()),
     fetch("diffuse.wgsl").then(r => r.text()),
@@ -48,8 +36,6 @@ async function init() {
   const diffuseModule = device.createShaderModule({ code: diffuseCode });
   const renderModule  = device.createShaderModule({ code: renderCode  });
 
-  // ── Trail textures (ping-pong A / B) ──────────────────────────────────────
-  // r32float: supports storage-texture write-only + texture_2d read via textureLoad
   const trail = [0, 1].map(() =>
     device.createTexture({
       size:   [TRAIL_W, TRAIL_H],
@@ -73,37 +59,31 @@ async function init() {
   };
   clearTrail();
 
-  // ── Buffers ────────────────────────────────────────────────────────────────
-  // Agents: pos (vec2f) + angle (f32) + _pad (f32) = 16 bytes each
   const agentBuffer = device.createBuffer({
     size:  AGENT_COUNT * 16,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 
-  // Deposit: one atomic<u32> per trail texel
   const depositBuffer = device.createBuffer({
     size:  TRAIL_W * TRAIL_H * 4,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 
-  // Uniforms: 16 × f32 = 64 bytes
   const uniformBuffer = device.createBuffer({
     size:  UNI_FLOATS * 4,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  // ── Agent initialisation ───────────────────────────────────────────────────
   function initAgents() {
     const data = new Float32Array(AGENT_COUNT * 4);
     for (let i = 0; i < AGENT_COUNT; i++) {
       const b = i * 4;
-      // Place agents in a ring around the centre, facing inward
       const t = (i / AGENT_COUNT) * Math.PI * 2;
       const r = 80 + Math.random() * 60;
-      data[b + 0] = TRAIL_W / 2 + Math.cos(t) * r;  // pos.x
-      data[b + 1] = TRAIL_H / 2 + Math.sin(t) * r;  // pos.y
-      data[b + 2] = t + Math.PI;                     // angle (face inward)
-      data[b + 3] = 0;                               // _pad
+      data[b + 0] = TRAIL_W / 2 + Math.cos(t) * r;  
+      data[b + 1] = TRAIL_H / 2 + Math.sin(t) * r; 
+      data[b + 2] = t + Math.PI;            
+      data[b + 3] = 0;                
     }
     device.queue.writeBuffer(agentBuffer, 0, data);
     device.queue.writeBuffer(depositBuffer, 0, new Uint32Array(TRAIL_W * TRAIL_H));
@@ -111,7 +91,6 @@ async function init() {
   }
   initAgents();
 
-  // ── Bind-group layouts ─────────────────────────────────────────────────────
   const agentBGL = device.createBindGroupLayout({
     entries: [
       { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer:  { type: "storage" } },
@@ -137,7 +116,6 @@ async function init() {
     ],
   });
 
-  // ── Pipelines ──────────────────────────────────────────────────────────────
   const agentPipeline = device.createComputePipeline({
     layout:  device.createPipelineLayout({ bindGroupLayouts: [agentBGL]   }),
     compute: { module: agentModule,   entryPoint: "cs_main" },
@@ -154,12 +132,6 @@ async function init() {
     fragment:  { module: renderModule, entryPoint: "fs_main", targets: [{ format }] },
     primitive: { topology: "triangle-list" },
   });
-
-  // ── Bind groups (two sets for ping-pong) ───────────────────────────────────
-  // pingPong = p:
-  //   agents   read  trail[p]
-  //   diffuse  read  trail[p]  →  write trail[1-p]
-  //   render   read  trail[1-p]  (the freshly-written one)
 
   const agentBG = [0, 1].map(p =>
     device.createBindGroup({
@@ -195,7 +167,6 @@ async function init() {
     })
   );
 
-  // ── Mouse tracking ─────────────────────────────────────────────────────────
   let mouseX = -1, mouseY = -1, mouseDown = false;
 
   function updateMouse(e, down) {
@@ -211,7 +182,6 @@ async function init() {
   canvas.addEventListener("mouseup",    e => updateMouse(e, false));
   canvas.addEventListener("mouseleave", e => updateMouse(e, false));
 
-  // ── UI ─────────────────────────────────────────────────────────────────────
   const $ = id => document.getElementById(id);
   const getF = id => parseFloat($(id).value);
 
@@ -229,7 +199,6 @@ async function init() {
 
   $("resetBtn").addEventListener("click", initAgents);
 
-  // ── Frame loop ─────────────────────────────────────────────────────────────
   let pingPong  = 0;
   const t0      = performance.now();
 
@@ -244,7 +213,6 @@ async function init() {
     const moveSpeed   = getF("moveSpeedSlider");
     const bloomAmt    = getF("bloomSlider");
 
-    // Layout must exactly match struct Uniforms in all shaders (16 × f32)
     device.queue.writeBuffer(uniformBuffer, 0, new Float32Array([
       TRAIL_W, TRAIL_H, AGENT_COUNT, time,
       decay, sensorAngle, sensorDist, turnSpeed,
@@ -254,7 +222,6 @@ async function init() {
 
     const encoder = device.createCommandEncoder();
 
-    // 1) Agent sense-turn-move + deposit
     {
       const pass = encoder.beginComputePass();
       pass.setPipeline(agentPipeline);
@@ -263,7 +230,6 @@ async function init() {
       pass.end();
     }
 
-    // 2) Diffuse + decay trail (reads trail[pp] → writes trail[1-pp])
     {
       const pass = encoder.beginComputePass();
       pass.setPipeline(diffusePipeline);
@@ -272,7 +238,6 @@ async function init() {
       pass.end();
     }
 
-    // 3) Render trail[1-pp] with bloom
     {
       const view = context.getCurrentTexture().createView();
       const pass = encoder.beginRenderPass({

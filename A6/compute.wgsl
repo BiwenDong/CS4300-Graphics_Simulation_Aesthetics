@@ -1,21 +1,3 @@
-// Langton's Ants – compute shader
-//
-// Direction encoding:  0 = up, 1 = right, 2 = down, 3 = left
-//
-// Ant types:
-//   0  Classic  – empty → turn CW  + stamp trail
-//              – trail → turn CCW + erase trail
-//   1  Reverse  – empty → turn CCW + stamp trail
-//              – trail → turn CW  + erase trail
-//   2  Builder  – empty → turn CW  + stamp trail
-//              – trail → go straight, keep trail (builds denser structures)
-//
-// Grid cell values:
-//   0 = empty
-//   1 = classic pheromone
-//   2 = reverse pheromone
-//   3 = builder pheromone
-
 struct Ant {
   x:        u32,
   y:        u32,

@@ -1,9 +1,3 @@
-// Langton's Ants – vertex + fragment shader
-//
-// Renders a full-screen quad.  The fragment shader maps each pixel to a grid
-// cell, reads the pheromone value, and also checks whether an ant occupies
-// that cell so it can be drawn on top.
-
 struct Uniforms {
   grid_w:    u32,
   grid_h:    u32,

@@ -1,12 +1,3 @@
-// Physarum Slime Mold – diffuse + decay compute shader
-//
-// For each texel:
-//   1. Apply a 3×3 box blur to the incoming trail (diffusion)
-//   2. Multiply by decay rate (evaporation)
-//   3. Atomically read-and-clear the deposit counter, add scaled pheromone
-//   4. Optionally inject a Gaussian beacon at the mouse cursor
-//   5. Clamp to [0, 1] and write to the output trail texture
-
 struct Uniforms {
   tex_w:        f32,
   tex_h:        f32,
@@ -44,7 +35,6 @@ fn cs_main(@builtin(global_invocation_id) gid: vec3u) {
   let y = i32(gid.y);
   if (x >= i32(uni.tex_w) || y >= i32(uni.tex_h)) { return; }
 
-  // 3×3 box blur (uniform weight)
   var blurred = 0.0;
   for (var dy = -1; dy <= 1; dy++) {
     for (var dx = -1; dx <= 1; dx++) {
@@ -53,14 +43,11 @@ fn cs_main(@builtin(global_invocation_id) gid: vec3u) {
   }
   blurred /= 9.0;
 
-  // Read deposit count and atomically clear it for the next frame
   let idx = u32(y) * u32(uni.tex_w) + u32(x);
   let dep = f32(atomicExchange(&deposit[idx], 0u));
 
-  // Each agent visit contributes ~0.04 so one heavily-visited cell saturates
   var val = blurred * uni.decay + dep * 0.04;
 
-  // Mouse: inject a soft pheromone beacon to attract agents
   if (uni.mouse_active > 0.5) {
     let dx = f32(x) - uni.mouse_x;
     let dy = f32(y) - uni.mouse_y;

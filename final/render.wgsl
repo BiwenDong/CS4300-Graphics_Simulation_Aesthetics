@@ -1,11 +1,3 @@
-// Physarum Slime Mold – display shader
-//
-// Post-processing: two-ring bloom approximation
-//   • ring 1 (radius 4 px)  – tight glow around trail edges
-//   • ring 2 (radius 10 px) – wide soft halo
-// The direct value + weighted bloom sum is fed into a bioluminescent colour
-// palette (deep navy → teal → icy white).
-
 struct Uniforms {
   tex_w:     f32,
   tex_h:     f32,
@@ -38,14 +30,12 @@ fn vs_main(@builtin(vertex_index) vid: u32) -> VSOut {
   return out;
 }
 
-// Clamp-to-border texel read (black outside)
 fn load(px: vec2i) -> f32 {
   let cx = clamp(px.x, 0, i32(uni.tex_w) - 1);
   let cy = clamp(px.y, 0, i32(uni.tex_h) - 1);
   return textureLoad(trail_tex, vec2i(cx, cy), 0).r;
 }
 
-// 8-point ring sample centred on `px` with given radius
 fn ring(px: vec2i, r: i32) -> f32 {
   var s = 0.0;
   s += load(px + vec2i(-r, -r));
@@ -59,7 +49,6 @@ fn ring(px: vec2i, r: i32) -> f32 {
   return s / 8.0;
 }
 
-// Bioluminescent palette: near-black → teal → icy white-cyan
 fn palette(t: f32) -> vec3f {
   let c0 = vec3f(0.00, 0.00, 0.06);
   let c1 = vec3f(0.00, 0.78, 0.72);
@@ -74,8 +63,8 @@ fn fs_main(in: VSOut) -> @location(0) vec4f {
   let px = vec2i(i32(in.uv.x * uni.tex_w), i32(in.uv.y * uni.tex_h));
 
   let direct = load(px);
-  let b1     = ring(px,  4);   // tight glow
-  let b2     = ring(px, 10);   // wide halo
+  let b1     = ring(px,  4);
+  let b2     = ring(px, 10);
 
   let t = clamp(direct + (b1 * 0.55 + b2 * 0.25) * uni.bloom_amt, 0.0, 1.0);
   return vec4f(palette(pow(t, 0.55)), 1.0);

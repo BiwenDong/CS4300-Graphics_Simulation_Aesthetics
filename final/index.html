@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Physarum Slime Mold</title>
+  <style>
+    body {
+      margin: 0;
+      background: #060610;
+      color: #bbb;
+      font-family: monospace;
+      padding: 16px;
+    }
+    canvas {
+      display: block;
+      width: 512px;
+      height: 512px;
+      cursor: crosshair;
+    }
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+    input[type="range"] { width: 110px; }
+    button {
+      padding: 5px 14px;
+      background: #0d0d20;
+      color: #66ccff;
+      border: 1px solid #224;
+      cursor: pointer;
+      font-family: monospace;
+    }
+    button:hover { background: #1a1a40; }
+    .note { margin-top: 6px; font-size: 11px; color: #444; }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <div class="controls">
+    <button id="resetBtn">Reset</button>
+
+    <label>Decay:
+      <input id="decaySlider" type="range" min="0.90" max="0.99" step="0.001" value="0.96">
+      <span id="decayVal">0.96</span>
+    </label>
+
+    <label>Sensor Angle:
+      <input id="sensorAngSlider" type="range" min="10" max="60" step="1" value="30">
+      <span id="sensorAngVal">30</span>&deg;
+    </label>
+
+    <label>Sensor Dist:
+      <input id="sensorDistSlider" type="range" min="3" max="25" step="1" value="9">
+      <span id="sensorDistVal">9</span>px
+    </label>
+
+    <label>Turn Speed:
+      <input id="turnSpeedSlider" type="range" min="0.05" max="0.80" step="0.01" value="0.30">
+      <span id="turnSpeedVal">0.30</span>
+    </label>
+
+    <label>Move Speed:
+      <input id="moveSpeedSlider" type="range" min="0.5" max="3.0" step="0.1" value="1.5">
+      <span id="moveSpeedVal">1.5</span>px
+    </label>
+
+    <label>Bloom:
+      <input id="bloomSlider" type="range" min="0" max="3.0" step="0.1" value="1.2">
+      <span id="bloomVal">1.2</span>
+    </label>
+  </div>
+
+  <div class="note">Click / drag on canvas to attract agents with a pheromone beacon. Sliders take effect immediately.</div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

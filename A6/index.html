@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Langton's Ants</title>
+  <style>
+    body {
+      margin: 0;
+      background: #080810;
+      color: #bbb;
+      font-family: monospace;
+      padding: 16px;
+    }
+    canvas {
+      display: block;
+      width: 512px;
+      height: 512px;
+      image-rendering: pixelated;
+    }
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    label { display: flex; align-items: center; gap: 6px; }
+    input[type="range"] { width: 120px; }
+    button {
+      padding: 5px 14px;
+      background: #1a1a30;
+      color: #99ccff;
+      border: 1px solid #334;
+      cursor: pointer;
+      font-family: monospace;
+    }
+    button:hover { background: #2a2a50; }
+    #stepCount { font-size: 12px; color: #666; }
+    .legend {
+      margin-top: 8px;
+      font-size: 12px;
+      display: flex;
+      gap: 16px;
+    }
+    .swatch {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .note { margin-top: 6px; font-size: 11px; color: #555; }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <div class="controls">
+    <button id="resetBtn">Reset</button>
+
+    <label>
+      Speed:
+      <input id="speedSlider" type="range" min="1" max="100" step="1" value="5">
+      <span id="speedVal">5</span> steps/frame
+    </label>
+
+    <label>
+      Ants:
+      <input id="antCountSlider" type="range" min="1" max="9" step="1" value="3">
+      <span id="antCountVal">3</span>
+    </label>
+
+    <span id="stepCount">Steps: 0</span>
+  </div>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:#ff4040"></span>Classic (type 0) — trail: <span class="swatch" style="background:#00d9cc"></span>cyan</span>
+    <span><span class="swatch" style="background:#40ff58"></span>Reverse (type 1) — trail: <span class="swatch" style="background:#bf40ff"></span>violet</span>
+    <span><span class="swatch" style="background:#73b2ff"></span>Builder (type 2) — trail: <span class="swatch" style="background:#ffb31a"></span>amber</span>
+  </div>
+  <div class="note">Change ant count then press Reset to apply.</div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
